@@ -1,0 +1,22 @@
+name: Deploy React Calculator
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: |
+          export NODE_OPTIONS=--openssl-legacy-provider
+          npm install
+          npm run build
+      - run: |
+          sudo rm -rf /var/www/react-calculator
+          sudo mkdir -p /var/www/react-calculator
+          sudo cp -r build/* /var/www/react-calculator/
+          echo "✅ React Calculator deployed at http://localhost/react-calculator/"
